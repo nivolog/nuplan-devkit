@@ -2,20 +2,29 @@
 В папке dataset должны быть в итоге папки maps и nuplan-v1.1
 
 Далее билдим докер
-> docker build -t _yourname_/nuplan .
+```scss /* или css */
+docker build -t _yourname_/nuplan .
+```
+
 
 После этого, заходим в файл run_docker.sh и ищем строчку 
-> -v _/mnt/hdd5/NuPlan/dockerfiles/dataset_:/nuplan-devkit/nuplan/dataset:rw
-
+```scss /* или css */
+-v _/mnt/hdd5/NuPlan/dockerfiles/dataset_:/nuplan-devkit/nuplan/dataset:rw
+```
 Выделенный курсивом путь до датасета нужно заменить на тот, который у вас на компьютере. 
 
 Затем запускаем этот сценарий:
-> bash run_docker.sh
+```scss /* или css */
+bash run_docker.sh
+```
 
 Внутри контейнера:
-> cd nuplan-devkit
+```scss /* или css */
+cd nuplan-devkit
 
-> bash set_env.sh
-
+bash set_env.sh
+```
 Это запустит установку среды nuplan'а. Как все закончится, запускаем юпитер ноутбук:
-> bash run_jupyter.sh
+```scss /* или css */
+bash run_jupyter.sh
+```
