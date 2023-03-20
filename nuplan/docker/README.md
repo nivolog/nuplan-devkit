@@ -9,9 +9,9 @@ docker build -t _yourname_/nuplan .
 
 После этого, заходим в файл run_docker.sh и ищем строчку 
 ```scss /* или css */
--v _/mnt/hdd5/NuPlan/dockerfiles/dataset_:/nuplan-devkit/nuplan/dataset:rw
+-v /mnt/hdd5/NuPlan/dockerfiles/dataset:/nuplan-devkit/nuplan/dataset:rw
 ```
-Выделенный курсивом путь до датасета нужно заменить на тот, который у вас на компьютере. 
+Путь до датасета "/mnt/hdd5/NuPlan/dockerfiles/dataset" нужно заменить на тот, который у вас на компьютере. 
 
 Затем запускаем этот сценарий:
 ```scss /* или css */
