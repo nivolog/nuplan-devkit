@@ -3,7 +3,7 @@
 
 Далее билдим докер
 ```scss /* или css */
-docker build -t _yourname_/nuplan .
+docker build -t nuplan .
 ```
 
 
