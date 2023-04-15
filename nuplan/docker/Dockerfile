@@ -28,6 +28,5 @@ RUN apt-get update && apt-get install -y git \
     && apt-get install --reinstall -y ca-certificates \
     && git clone https://github.com/motional/nuplan-devkit.git && cd nuplan-devkit
 
-    
 COPY run_jupyter.sh nuplan-devkit
 COPY set_env.sh nuplan-devkit
