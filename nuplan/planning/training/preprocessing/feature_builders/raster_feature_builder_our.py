@@ -14,7 +14,7 @@ from nuplan.planning.training.preprocessing.feature_builders.abstract_feature_bu
     AbstractFeatureBuilder,
     AbstractModelFeature,
 )
-from nuplan.planning.training.preprocessing.features.raster import Raster
+from nuplan.planning.training.preprocessing.features.raster_our import RasterOur
 from nuplan.planning.training.preprocessing.features.raster_utils import (
     get_agents_raster,
     get_baseline_paths_raster,
