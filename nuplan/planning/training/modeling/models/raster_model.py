@@ -56,6 +56,7 @@ class RasterModel(TorchModuleWrapper):
 
         num_output_features = future_trajectory_sampling.num_poses * num_features_per_pose
         self._model = timm.create_model(model_name, pretrained=pretrained, num_classes=0, in_chans=num_input_channels)
+        
         mlp = torch.nn.Linear(in_features=self._model.num_features, out_features=num_output_features)
 
         if hasattr(self._model, 'classifier'):

@@ -2,6 +2,7 @@ from typing import List
 
 import timm
 import torch
+from torch import nn
 
 from nuplan.planning.simulation.trajectory.trajectory_sampling import TrajectorySampling
 from nuplan.planning.training.modeling.torch_module_wrapper import TorchModuleWrapper
@@ -10,7 +11,6 @@ from nuplan.planning.training.preprocessing.feature_builders.abstract_feature_bu
 from nuplan.planning.training.preprocessing.features.raster import Raster
 from nuplan.planning.training.preprocessing.features.trajectory import Trajectory
 from nuplan.planning.training.preprocessing.target_builders.abstract_target_builder import AbstractTargetBuilder
-
 
 def convert_predictions_to_trajectory(predictions: torch.Tensor) -> torch.Tensor:
     """
@@ -22,7 +22,7 @@ def convert_predictions_to_trajectory(predictions: torch.Tensor) -> torch.Tensor
     return predictions.view(num_batches, -1, Trajectory.state_size())
 
 
-class RasterModel(TorchModuleWrapper):
+class RasterModelOur(TorchModuleWrapper):
     """
     Wrapper around raster-based CNN model that consumes ego, agent and map data in rasterized format
     and regresses ego's future trajectory.
@@ -55,15 +55,26 @@ class RasterModel(TorchModuleWrapper):
         )
 
         num_output_features = future_trajectory_sampling.num_poses * num_features_per_pose
-        self._model = timm.create_model(model_name, pretrained=pretrained, num_classes=0, in_chans=num_input_channels)
-        mlp = torch.nn.Linear(in_features=self._model.num_features, out_features=num_output_features)
+        #self._model = timm.create_model(model_name, pretrained=pretrained, num_classes=0, in_chans=num_input_channels)
 
-        if hasattr(self._model, 'classifier'):
-            self._model.classifier = mlp
-        elif hasattr(self._model, 'fc'):
-            self._model.fc = mlp
-        else:
-            raise NameError('Expected output layer named "classifier" or "fc" in model')
+        #mlp = torch.nn.Linear(in_features=self._model.num_features, out_features=num_output_features)
+
+        #if hasattr(self._model, 'classifier'):
+        #    self._model.classifier = mlp
+        #elif hasattr(self._model, 'fc'):
+        #    self._model.fc = mlp
+        #else:
+        #    raise NameError('Expected output layer named "classifier" or "fc" in model')
+        
+        self.layer = nn.Sequential(nn.Conv2d(4, 32, kernel_size=5, stride=1, padding=2),
+                                    nn.ReLU(), nn.MaxPool2d(kernel_size=2, stride=2))
+        #self.layer2 = nn.Sequential(nn.Conv2d(32, 64, kernel_size=5, stride=1, padding=2), 
+        #   nn.ReLU(), nn.MaxPool2d(kernel_size=2, stride=2))
+        #self.drop_out = nn.Dropout()
+        #self.fc1 = nn.Linear(7*7*32, num_output_features)
+        self.fc2 = nn.Linear(112*112*32, num_output_features)
+
+
 
     def forward(self, features: FeaturesType) -> TargetsType:
         """
@@ -78,7 +89,12 @@ class RasterModel(TorchModuleWrapper):
                         }
         """
         raster: Raster = features["raster"]
-
-        predictions = self._model.forward(raster.data)
+	
+        out = self.layer(raster.data)
+        out = out.reshape(out.size(0), -1)
+        predictions = self.fc2(out)
+        
+        #predictions = self._model.forward(raster.data)
+        #print(predictions.size())
 
         return {"trajectory": Trajectory(data=convert_predictions_to_trajectory(predictions))}

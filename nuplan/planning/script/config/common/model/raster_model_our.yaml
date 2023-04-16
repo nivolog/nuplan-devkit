@@ -1,4 +1,4 @@
-_target_: nuplan.planning.training.modeling.models.raster_model_our.RasterModel
+_target_: nuplan.planning.training.modeling.models.raster_model_our.RasterModelOur
 _convert_: 'all'
 model_name: resnet50  # model name to load from TIMM (e.g. tf_mobilenetv3_small_minimal_100, efficientnet_b3)
 pretrained: true  # whether to use pretrained weights
